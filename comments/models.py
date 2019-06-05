@@ -17,10 +17,10 @@ class Comment(models.Model):
 	"""
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	comment_text = models.TextField()
-	parent = models.ForeignKey("self", on_delete=models.CASCADE, null=True)
+	parent = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True)
 	created_date = models.DateTimeField(auto_now_add=True)
 	modified_date = models.DateTimeField(auto_now=True)
 
 	def __str__(self):
 		# Returning first 100 characters of every comment text
-		return comment_text[:100]
+		return self.comment_text[:100] + ' (' + str(self.pk) + ')'
