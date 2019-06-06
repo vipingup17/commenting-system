@@ -12,6 +12,7 @@ from django.shortcuts import render
 # -- Local Libraries
 from .models import Comment
 from .serializers import CommentSerializer
+from .serializers import GetCommentSerializer
 
 # -- External Libraries
 from rest_framework import generics
@@ -19,7 +20,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-# Create your views here.
+
 class CommentCreate(generics.ListCreateAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
@@ -37,10 +38,10 @@ class CommentDetail(APIView):
 
     def get(self, request, pk, format=None):
         comment = self.get_object(pk)
-        serializer = CommentSerializer(comment)
+        serializer = GetCommentSerializer(comment)
         return Response(serializer.data)
 
-    def put(self, request, pk, format=None):
+    def patch(self, request, pk, format=None):
         comment = self.get_object(pk)
         serializer = CommentSerializer(comment, data=request.data)
         if serializer.is_valid():

@@ -17,7 +17,7 @@ class Comment(models.Model):
 	"""
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	comment_text = models.TextField()
-	parent = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True)
+	parent = models.ForeignKey("self", on_delete=models.CASCADE, related_name="child", null=True, blank=True)
 	created_date = models.DateTimeField(auto_now_add=True)
 	modified_date = models.DateTimeField(auto_now=True)
 

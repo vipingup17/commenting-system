@@ -12,18 +12,8 @@ from .models import Comment
 # -- External Libraries
 from rest_framework import serializers
 
-# class UserSerializer(serializers.ModelSerializer):
-# 	class Meta:
-# 		model = User
-# 		fields = ['username']
-# 		extra_kwargs = {
-#             'username': {
-#                 'validators': [UnicodeUsernameValidator()],
-#             }
-#         }
 
 class CommentSerializer(serializers.ModelSerializer):
-	# user = UserSerializer(read_only=True)
 
 	class Meta:
 		model = Comment
@@ -35,5 +25,16 @@ class CommentSerializer(serializers.ModelSerializer):
 		parent = validated_data.get('parent')
 		comment = Comment.objects.create(user=user, comment_text=comment_text, parent=parent)
 		return comment
+
+
+class GetCommentSerializer(serializers.ModelSerializer):
+    replies = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Comment
+        fields = ['comment_text', 'user', 'parent', 'replies']
+
+    def get_replies(self, obj): 
+        return {  child.comment_text for child in obj.child.all() }
 
 
