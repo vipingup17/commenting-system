@@ -22,7 +22,7 @@ from rest_framework.views import APIView
 
 
 class CommentCreate(generics.ListCreateAPIView):
-    queryset = Comment.objects.all()
+    queryset = Comment.objects.filter(depth=0)
     serializer_class = CommentSerializer
 
 

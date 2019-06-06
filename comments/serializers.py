@@ -23,18 +23,24 @@ class CommentSerializer(serializers.ModelSerializer):
 		comment_text = validated_data.pop('comment_text')
 		user = validated_data.pop('user')
 		parent = validated_data.get('parent')
-		comment = Comment.objects.create(user=user, comment_text=comment_text, parent=parent)
+		depth = 1
+		if parent:
+			if parent.depth == 1:
+				parent = parent.parent
+		else:
+			depth = 0
+		comment = Comment.objects.create(user=user, comment_text=comment_text, parent=parent, depth=depth)
 		return comment
 
 
 class GetCommentSerializer(serializers.ModelSerializer):
-    replies = serializers.SerializerMethodField()
+	replies = serializers.SerializerMethodField()
 
-    class Meta:
-        model = Comment
-        fields = ['comment_text', 'user', 'parent', 'replies']
+	class Meta:
+		model = Comment
+		fields = ['comment_text', 'user', 'parent', 'replies']
 
-    def get_replies(self, obj): 
-        return {  child.comment_text for child in obj.child.all() }
+	def get_replies(self, obj): 
+		return {  child.comment_text for child in obj.child.all().order_by('created_date') }
 
 
