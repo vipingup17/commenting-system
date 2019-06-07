@@ -4,17 +4,15 @@
 #
 # Created on Tue June 5 2019
 
-# -- Internal Libraries
-from django.contrib.auth.models import User
-from django.http import Http404
-from django.shortcuts import render
-
 # -- Local Libraries
 from .models import Comment
 from .serializers import CommentSerializer
 from .serializers import GetCommentSerializer
 
 # -- External Libraries
+from django.contrib.auth.models import User
+from django.http import Http404
+from django.shortcuts import render
 from rest_framework import generics
 from rest_framework import status
 from rest_framework.response import Response
@@ -74,8 +72,18 @@ class CommentDetail(APIView):
         
         # If serializer is valid, save the Comment instance with the updated data
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
+
+            # Check if the user has the permission to edit this comment
+            if comment.has_permission(serializer.validated_data.get('user').id):
+                # Save the updated data
+                serializer.save()
+                return Response(serializer.data)
+            else:
+                # Send 403 response code and an appropriate response message
+                response = {
+                    "error": "This user is not authorized to edit this comment"
+                }
+            return Response(response, status=status.HTTP_403_FORBIDDEN)
         
         # If not valid, return the appropriate response
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -89,8 +97,15 @@ class CommentDetail(APIView):
         """
         comment = self.get_object(pk)
         
-        # Delete the comment
-        comment.delete()
+        # Check if the user requesting to delete the comment is the same as the user who created it
+        if comment.has_permission(request.data.get('user')):
+            # Delete the comment
+            comment.delete()
 
-        # Return appropriate response
-        return Response(status=status.HTTP_204_NO_CONTENT)
+            # Return appropriate response
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            response = {
+                "error": "This user is not authorized to delete this comment"
+            }
+            return Response(response, status=status.HTTP_403_FORBIDDEN)

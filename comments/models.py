@@ -25,3 +25,8 @@ class Comment(models.Model):
 	def __str__(self):
 		# Returning first 100 characters of every comment text
 		return self.comment_text[:100] + ' (' + str(self.pk) + ')'
+
+	def has_permission(self, user_id):
+		if self.user.id == user_id:
+			return True
+		return False

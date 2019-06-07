@@ -100,7 +100,16 @@ where pk is the primary key of a comment or a reply
 
 To fetch a comment and all of it's replies, send an HTTP GET request on the above URL with pk as an integer (the primary key of the comment)
 
-To delete a comment, send an HTTP DELETE request on the above URL with pk as an integer (the primary key of the comment)
+To delete a comment, send an HTTP DELETE request on the above URL with pk as an integer (the primary key of the comment). 
+
+In the body of the message, send the user id as follows:
+
+```
+{
+	"user": 2
+}
+```
+If the user is the one that created the comment, the comment will get deleted otherwise an error message is sent in response along with 403 status code
 
 To edit a comment, send an HTTP PATCH request on the above URL with a sample body as follows:
 
@@ -113,3 +122,5 @@ To edit a comment, send an HTTP PATCH request on the above URL with a sample bod
 	"parent": null
 }
 ```
+
+If the user is the one that created the comment, the comment will get updated otherwise an error message is sent in response along with 403 status code
