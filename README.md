@@ -7,6 +7,7 @@ This is a commenting system where users can add comments and replies to comments
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See **Deployment** for notes on how to use the already deployed live system.
 
 * Clone the repository on your local machine by using the command:
+
 ```
 $ git clone https://github.com/vipingup17/commenting-system.git
 ```
@@ -25,7 +26,20 @@ $ git clone https://github.com/vipingup17/commenting-system.git
 ```
 
 * Create a Postgresql database configure the database settings as per your local database engine and credentials (See settings.py)
-* Run the django development server on port 8000 by executing the following command:
+
+## Running the tests
+
+I have written unit tests for this system. The unit tests are written in test_views.py file of comments app
+
+Run the following command to run the unit tests
+
+```
+python manage.py test
+```
+
+### Running the project on local machine
+
+* If there is no unit test that fails, go ahead and run the django development server on port 8000 by executing the following command:
 
 ```
 python manage.py runserver
@@ -70,7 +84,7 @@ The above API call should get back a response such as follows:
 
 ```
 {
-    "id": 27,
+    "id": 7,
     "comment_text": "This is a sample comment",
     "user": 3,
     "parent": null
@@ -82,9 +96,9 @@ To create a reply (which is also a comment), the parent paramter will have an id
 
 ```
 {
-	"comment_text": "This is a sample comment",
+	"comment_text": "This is a sample reply",
 	"user": 3,
-	"parent": 1
+	"parent": 7
 
 }
 ```
@@ -100,17 +114,6 @@ where pk is the primary key of a comment or a reply
 
 To fetch a comment and all of it's replies, send an HTTP GET request on the above URL with pk as an integer (the primary key of the comment)
 
-To delete a comment, send an HTTP DELETE request on the above URL with pk as an integer (the primary key of the comment). 
-
-In the body of the message, send the user id as follows:
-
-```
-{
-	"user": 2
-}
-```
-If the user is the one that created the comment, the comment will get deleted otherwise an error message is sent in response along with 403 status code
-
 To edit a comment, send an HTTP PATCH request on the above URL with a sample body as follows:
 
 * Suppose you want to edit a comment with id as 5, then your URL will be http://3.15.40.213/comments/5 and the body will be as follows:
@@ -124,3 +127,14 @@ To edit a comment, send an HTTP PATCH request on the above URL with a sample bod
 ```
 
 If the user is the one that created the comment, the comment will get updated otherwise an error message is sent in response along with 403 status code
+
+To delete a comment, send an HTTP DELETE request on the above URL with pk as an integer (the primary key of the comment). 
+
+In the body of the message, send the user id as follows:
+
+```
+{
+	"user": 2
+}
+```
+If the user is the one that created the comment, the comment will get deleted otherwise an error message is sent in response along with 403 status code
