@@ -45,14 +45,11 @@ python manage.py test
 python manage.py runserver
 ```
 
-## Deployment
+## Using the application
 
-To use the already deployed system
+To use the application
 
-* The system is deployed on an AWS EC2 instance having Ubuntu 18.04
-* Gunicorn and Nginx are used as application server and reverse proxy respectively
-
-I have created 4 users for working with the API endpoints
+Let us say you have created 4 users for working with the API endpoints
 
 ```
 User2 with pk as 2
@@ -66,7 +63,7 @@ Please find below the API endpoints used to perform operations on comments
 API endpoint for creating a comment or a reply:
 
 ```
-http://3.15.40.213/comments/create
+http://localhost:8000/comments/create
 ```
 
 To create a new comment or a reply, send the following sample data in the body of the HTTP POST request
@@ -108,7 +105,7 @@ In the above example, 3 is the primary key or id of the user. 'parent' will be n
 API endpoint for get, edit, delete operations on a comment:
 
 ```
-http://3.15.40.213/comments/pk
+http://localhost:8000/comments/pk
 ```
 where pk is the primary key of a comment or a reply
 
@@ -116,7 +113,7 @@ To fetch a comment and all of it's replies, send an HTTP GET request on the abov
 
 To edit a comment, send an HTTP PATCH request on the above URL with a sample body as follows:
 
-* Suppose you want to edit a comment with id as 5, then your URL will be http://3.15.40.213/comments/5 and the body will be as follows:
+* Suppose you want to edit a comment with id as 5, then your URL will be http://localhost:8000/comments/5 and the body will be as follows:
 
 ```
 {
